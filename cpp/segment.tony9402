@@ -1,0 +1,32 @@
+template<typename T>
+struct Segment{
+    int siz;
+    vector<T> tree;
+    function<T(T,T)> mergeNode;
+    Segment(int n) { setting(n); }
+    Segment(int n, function<T(T,T)> func) { setting(n); }
+    Segment(const vector<T> &v) { setting(siz(v)); setting(v); }
+    Segment(const vector<T> &v, function<T(T,T)> func) { setting(func); setting(siz(v)); setting(v); }
+    void setting(function<T(T,T)> func) { mergeNode = func; }
+    void setting(const vector<T> &v) { 
+        rep(i, siz(v)) tree[i + siz] = v[i]; 
+        rrepi(i, siz-1, 1) tree[i] = mergeNode(tree[i << 1], tree[i << 1 | 1]);
+    }
+    void setting(int n) {
+        for(siz=1;siz<=n;siz<<=1);
+        tree = vector<T>(siz << 1);
+    }
+    function<void(int, T)> update = [&](int idx, T data) -> void {
+        idx += siz;
+        tree[idx] = data;
+        while(idx >>= 1) tree[idx] = mergeNode(tree[idx << 1], tree[idx << 1 | 1]);
+    };
+    function<T(int,int)> query = [&](int l, int r) -> T {
+        T ret = 0;
+        for( l += siz, r += siz + 1; l < r; l >>= 1, r >>= 1 ){
+            if(l & 1) ret = mergeNode(ret, tree[l++]);
+            if(r & 1) ret = mergeNode(ret, tree[--r]);
+        }
+        return ret;
+    };
+};
