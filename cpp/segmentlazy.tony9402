@@ -1,0 +1,61 @@
+template<typename T>
+struct SegLazy{
+    int siz;
+    vector<T> tree, lazy;
+    function<T(T,T)> mergeNode, mergeLazy;
+    
+    SegLazy() { }
+    SegLazy(vector<T> &v) { setting((int)v.size()); setting(v); }
+    SegLazy(vector<T> &v, function<T(T,T)> mergeNode, function<T(T,T)> mergeLazy){
+        setting(mergeNode, mergeLazy);
+        setting((int)v.size()); setting(v);
+    }
+    // Size Setting
+    void setting(int n) { 
+        for(siz=1;siz<=n;siz<<=1); 
+        tree = vector<T>(siz << 1);
+        lazy = vector<T>(siz << 1);
+    }
+    void setting(function<T(T,T)> _mergeNode, function<T(T,T)> _mergeLazy) { 
+        mergeNode = _mergeNode; 
+        mergeLazy = _mergeLazy;
+    }
+    void setting(vector<T> &v) {
+        for(int i=0;i<(int)v.size();i++) tree[i + siz] = v[i];
+        for(int i=siz-1;i;i--) tree[i] = mergeNode(tree[i << 1], tree[i << 1 | 1]);
+    }
+    
+    function<void(int,int,int)> propagate = [&](int l, int r, int pos) -> void {
+        if(lazy[pos]) {
+            tree[pos] = mergeNode(tree[pos], lazy[pos] * (r - l + 1));
+            if(l != r){
+                lazy[pos << 1] = mergeLazy(lazy[pos << 1], lazy[pos]);
+                lazy[pos << 1 | 1] = mergeLazy(lazy[pos << 1 | 1], lazy[pos]);
+            }
+            lazy[pos] = 0;
+        }
+    };
+    function<void(int,int,int,int,int,T)> _update = [&](int l, int r, int s, int e, int pos, T x) {
+        if(s <= l && r <= e){
+            lazy[pos] = mergeLazy(lazy[pos], x);
+            propagate(l, r, pos);
+            return;
+        }
+        propagate(l, r, pos);
+        if(e < l || r < s) return;
+        int m = (l + r) / 2;
+        _update(l, m, s, e, pos << 1, x); _update(m + 1, r, s, e, pos << 1 | 1, x);
+        tree[pos] = mergeNode(tree[pos << 1], tree[pos << 1 | 1]);
+    };
+    function<void(int,int,T)> update = [&](int s, int e, T x){ _update(0, siz - 1, s, e, 1, x); };
+
+    function<T(int,int,int,int,int)> _query = [&](int l, int r, int s, int e, int pos) -> T {
+        propagate(l, r, pos);
+        if(s <= l && r <= e) return tree[pos];
+        if(e <  l || r <  s) return T();
+        int m = (l + r) / 2;
+        return mergeNode( _query(l, m, s, e, pos << 1), 
+                    _query(m + 1, r, s, e, pos << 1 | 1));
+    };
+    function<T(int,int)> query = [&](int s, int e) -> T { return _query(0, siz - 1, s, e, 1); };
+};
