@@ -106,37 +106,7 @@ ll extgcd(ll a, ll b, ll &x, ll &y){
     }
     return x = 1, y = 0, a;
 }
-ll MOD = 1e9 + 7;
-struct mint {
-    ll x;
-    mint() { }
-    mint(ll xx):x(xx){ } 
-    mint operator+(mint o) { return mint( ( x + o.x ) % MOD); }
-    void operator+=(mint o) { *this = mint( ( x + o.x ) % MOD); }
-    mint operator-(mint o) { return mint( (x - o.x + MOD) % MOD); }
-    void operator-=(mint o) { *this = mint( (x - o.x + MOD) % MOD); }
-    mint operator*(mint o) { return mint( ( x * o.x ) % MOD); }
-    void operator*=(mint o) { *this = mint( ( x * o.x ) % MOD); }
-    mint operator/(mint o) { return *this * invert(o); }
-    void operator/=(mint o) { *this = *this * invert(o); }
-    bool operator<(mint o) { return x < o.x; }
-    bool operator<=(mint o) { return x <= o.x; }
-    bool operator>(mint o) { return x > o.x; }
-    bool operator>=(mint o) { return x >= o.x; }
-    bool operator==(mint o) { return x == o.x; }
-    bool operator!=(mint o) { return x != o.x; }
-    template<typename T> void operator=(T xx) { *this = mint(xx); }
-    mint invert(mint o) { 
-        ll x, y, g = extgcd(o.x, MOD, x, y); assert(g == 1); 
-        return mint((x + MOD) % MOD);
-    }
-    mint operator^(ll e) { return power(x, e, MOD); }
-    void operator^=(ll e) { *this = power(x, e, MOD); }
-    mint operator^(mint o) { return power(x, o.x, MOD); }
-    void operator^=(mint o) { *this = power(x, o.x, MOD); }
-};
-inline istream& operator>>(istream &in, mint &x) { in >> x.x; return in; }
-inline ostream& operator<<(ostream &out, const mint &x) { out << x.x; return out; }
+
 /****************************************************************************************************************************/
 /*************************************                   My Template End                *************************************/
 /****************************************************************************************************************************/
