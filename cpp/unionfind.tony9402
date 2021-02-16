@@ -1,6 +1,6 @@
 /* Union Find Template */
 vector<int> uf(N, -1);
-auto find = [&](int x, auto &self) -> void { return uf[x] < 0 ? x : uf[x] = self(uf[x]); };
+function<int(int)> find = [&](int x) -> int { return uf[x] < 0 ? x : uf[x] = find(uf[x]); };
 auto merge = [&](int a, int b) -> bool { 
     a = find(a); b = find(b);
     if(a == b)return false;
