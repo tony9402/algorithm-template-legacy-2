@@ -75,7 +75,7 @@ template<typename Type, typename... Types> void _DEBUG(Type arg, Types ...args) 
 /******** I/O TEMPLATE START ********/
 template<int fp=0> struct fastio{ fastio(){ 
 #ifndef LOCAL
-    if(fp>=0)ios::sync_with_stdio(false); cin.tie(0); 
+    if(fp>=0) { ios::sync_with_stdio(false); cin.tie(0); }
 #endif 
     if(fp>0)cout << fixed << setprecision(fp); 
 } };
@@ -84,7 +84,8 @@ template<typename Type> void input(Type &arg){cin >> arg;}
 template<typename Type, typename... Types> void input(Type &arg, Types &...args){cin>>arg;input(args...);}
 template<typename Type> void output(Type arg){cout<<arg;}
 template<typename Type, typename... Types> void output(Type arg, Types ...args){cout<<arg;output(args...);}
-template<typename T1, typename T2> inline istream& operator>>(istream &in, pair<T1, T2> &_p) { cin >> _p.first >> _p.second; return in; }
+template<typename T1, typename T2> inline istream& operator>>(istream &in, pair<T1, T2> &_p) { in >> _p.first >> _p.second; return in; }
+template<typename T1, typename T2> inline ostream& operator<<(ostream &out, const pair<T1, T2> &_p) { out << _p.first << ' ' << _p.second; return out; }
 template<typename Type> inline ostream& operator<<(ostream &out, const vector<Type> &v) { for(auto &i: v) out<<i<<' '; return out; }
 template<typename Type> inline istream& operator>>(istream &in, vector<Type> &v)       { for(auto &i: v) in>>i; return in; }
 template<typename Type> inline ostream& operator<<(ostream &out, const deque<Type> &v) { for(auto &i: v) out<<i<<' '; return out; }
@@ -106,13 +107,13 @@ ll extgcd(ll a, ll b, ll &x, ll &y){
     }
     return x = 1, y = 0, a;
 }
-
 /****************************************************************************************************************************/
 /*************************************                   My Template End                *************************************/
 /****************************************************************************************************************************/
 
 int main(){
     fastio<>();
+
 
     return 0;
 }
